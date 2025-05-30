@@ -1,8 +1,10 @@
 package com.example.demo.Service;
 
 
+import com.example.demo.DTO.PersonResponseDTO;
 import com.example.demo.Entity.BMI;
 import com.example.demo.Entity.Person;
+import com.example.demo.DTO.PersonDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -10,16 +12,16 @@ import java.util.Objects;
 @Service
 public class BMIService {
 
-    public BMI BMIResponseService(Person person){
+    public PersonResponseDTO BMIResponseService(PersonDTO person){
         double value = 0;
         String category ="";
-        if (Objects.equals(person.getUnit().toLowerCase(), "metric")){
-            value=(person.getWeight()/(person.getHeight()* person.getHeight()));
+        if (Objects.equals(person.unit().toLowerCase(), "metric")){
+            value=(person.weight()/(person.height()* person.height()));
             value = Math.round(value * 100.0) / 100.0;
 
-        }else if (Objects.equals(person.getUnit().toLowerCase(), "imperial")){
+        }else if (Objects.equals(person.unit().toLowerCase(), "imperial")){
 
-            value=(person.getWeight()*703/(person.getHeight()* person.getHeight()));
+            value=(person.weight()*703/(person.height()* person.height()));
             value = Math.round(value * 100.0) / 100.0;
         }else{
             System.out.println("Invalid unit! unit is either metric or imperial ");
@@ -40,6 +42,7 @@ public class BMIService {
             System.out.println("Obese!! visit the gym brother");
         }
 
-        return  new BMI(value,category,person.getName());
+        BMI bmi=  new BMI(value,category,person.name());
+        return new PersonResponseDTO(person.name(), person.age(), bmi);
     }
 }
